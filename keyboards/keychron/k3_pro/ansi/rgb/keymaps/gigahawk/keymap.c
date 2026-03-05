@@ -17,9 +17,10 @@
 #include QMK_KEYBOARD_H
 
 // TODO: Maybe color specific for mac layout?
-#define _BASE_COLOR_RGB 156, 123, 85
-#define _GAME_COLOR_RGB 147, 21, 21
-#define _TRAN_COLOR_RGB 45, 89, 24
+#define _BASE_COLOR_RGB 255, 205, 225
+#define _IMAC_COLOR_RGB 38, 38, 255
+#define _GAME_COLOR_RGB 255, 38, 38
+#define _TRAN_COLOR_RGB 130, 255, 68
 #define _CAPS_COLOR_RGB 146, 140, 16
 
 // clang-format off
@@ -56,30 +57,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______),
 
 [_FN] = LAYOUT_ansi_84(
-     _______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,  _______,  _______,
+     KC_CAPS,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,  _______,  _______,
      _______,  BT_HST1,  BT_HST2,  BT_HST3,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
      _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
      TG(_GAME),_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,            _______,
      _______,            _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,  _______,
-     _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______)
+     _______,  _______,  _______,                                KC_MPLY,                                _______,  _______,  _______,  KC_MPRV,  _______,  KC_MNXT)
 };
 
 bool dip_switch_update_user(uint8_t index, bool active) {
     if (index == 0) {
         if (active) {
-            default_layer_set(1UL << _MAC);
+            layer_on(_MAC);
         } else {
-            default_layer_set(1UL << _BASE);
+            layer_off(_MAC);
         }
     }
     return false;
 }
 
 bool rgb_matrix_indicators_user(void) {
+    // TODO: pretty sure this breaks handling of brightness control
     if (IS_LAYER_ON(_FN)) {
         rgb_matrix_set_color_all(_TRAN_COLOR_RGB);
     } else if (IS_LAYER_ON(_GAME)) {
         rgb_matrix_set_color_all(_GAME_COLOR_RGB);
+    } else if (IS_LAYER_ON(_MAC)) {
+        rgb_matrix_set_color_all(_IMAC_COLOR_RGB);
     } else if (IS_LAYER_ON(_BASE)) {
         rgb_matrix_set_color_all(_BASE_COLOR_RGB);
     }
