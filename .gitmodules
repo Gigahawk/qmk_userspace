@@ -1,0 +1,6 @@
+[submodule "submodules/qmk-fw"]
+	path = submodules/qmk-fw
+	url = https://github.com/qmk/qmk_firmware.git
+[submodule "submodules/qmk-fw-kc-bt"]
+	path = submodules/qmk-fw-kc-bt
+	url = https://github.com/Gigahawk/qmk_firmware.git
