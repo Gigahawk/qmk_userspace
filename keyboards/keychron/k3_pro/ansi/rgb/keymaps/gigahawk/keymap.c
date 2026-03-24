@@ -16,12 +16,12 @@
 
 #include QMK_KEYBOARD_H
 
-// TODO: Maybe color specific for mac layout?
-#define _BASE_COLOR_RGB 255, 205, 225
-#define _IMAC_COLOR_RGB 38, 38, 255
-#define _GAME_COLOR_RGB 255, 38, 38
-#define _TRAN_COLOR_RGB 130, 255, 68
-#define _CAPS_COLOR_RGB 146, 140, 16
+#define _BASE_COLOR_HSV (HSV){9, 0, 255}
+#define _IMAC_COLOR_HSV (HSV){140, 255, 255}
+#define _GAME_COLOR_HSV (HSV){0, 191, 255}
+#define _TRAN_COLOR_HSV (HSV){87, 255, 255}
+#define _CAPS_COLOR_HSV (HSV){51, 255, 255}
+#define _UNKN_COLOR_HSV (HSV){188, 255, 255}
 
 // clang-format off
 enum layers{
@@ -77,16 +77,21 @@ bool dip_switch_update_user(uint8_t index, bool active) {
 }
 
 bool rgb_matrix_indicators_user(void) {
-    // TODO: pretty sure this breaks handling of brightness control
+    HSV layer_color_hsv = _UNKN_COLOR_HSV;
     if (IS_LAYER_ON(_FN)) {
-        rgb_matrix_set_color_all(_TRAN_COLOR_RGB);
+        layer_color_hsv = _TRAN_COLOR_HSV;
     } else if (IS_LAYER_ON(_GAME)) {
-        rgb_matrix_set_color_all(_GAME_COLOR_RGB);
+        layer_color_hsv = _GAME_COLOR_HSV;
     } else if (IS_LAYER_ON(_MAC)) {
-        rgb_matrix_set_color_all(_IMAC_COLOR_RGB);
+        layer_color_hsv = _IMAC_COLOR_HSV;
     } else if (IS_LAYER_ON(_BASE)) {
-        rgb_matrix_set_color_all(_BASE_COLOR_RGB);
+        layer_color_hsv = _BASE_COLOR_HSV;
     }
+
+    layer_color_hsv.v = rgb_matrix_get_val();
+
+    RGB rgb = hsv_to_rgb(layer_color_hsv);
+    rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
 
     //if (host_keyboard_led_state().caps_lock) {
     //    for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; ++i) {
