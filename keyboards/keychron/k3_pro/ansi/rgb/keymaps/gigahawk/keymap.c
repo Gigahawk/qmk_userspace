@@ -95,5 +95,5 @@ bool rgb_matrix_indicators_user(void) {
     //        }
     //    }
     //}
-    return false;
+    return true;
 }
